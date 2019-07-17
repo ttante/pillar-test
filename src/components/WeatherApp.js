@@ -10,6 +10,7 @@ const localStorageCheck = 'testHasVisited'
 const urlBase = 'https://api.openweathermap.org/data/2.5/weather?'
 const urlTail = '&APPID=a0df8edc42f3dbaed0a667aa78e687ff'
 
+// i used classes everywhere so that I wouldnt waste time converting
 class WeatherApp extends React.Component {
   constructor(props) {
     super(props)
@@ -35,6 +36,7 @@ class WeatherApp extends React.Component {
     if (!prevProps.isGeolocationEnabled && isGeolocationEnabled) {
       this.loadInitialResultsFromCoords()
     } else if (prevProps.coords === null && coords !== null) {
+      console.log('fire')
       this.loadInitialResultsFromCoords()
     }
   }
@@ -50,31 +52,29 @@ class WeatherApp extends React.Component {
       showingCurrLocation: true
     })
 
-    this.updateResults.bind(this, true)
+    this.updateResults()
     localStorage.setItem(localStorageCheck, 'true')
   }
 
 
-  updateResults(initLocationUse = false) {
+  updateResults() {
+    const { coords } = this.props
     const { currentQuery, queryData } = this.state
     let queryString
-
-    if (!initLocationUse) {
-      this.setState({ showingCurrLocation: false })
-    }
 
     switch(currentQuery) {
       case 'city-name':
         queryString = `q=${queryData[currentQuery]},us`
         break
       case 'location':
-        queryString = `lat=${queryData.latitude}&lon=${queryData.longitude}`
-        break
       default:
+        // this was a quick fix that i would separate out later
+        queryString = `lat=${queryData.latitude || coords.latitude}&lon=${queryData.longitude || coords.longitude}`
         break
     }
 
     const url = `${urlBase}${queryString}${urlTail}`
+    console.log('url: ', url)
 
     axios.get(url)
       .then(res => {
