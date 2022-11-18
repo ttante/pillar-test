@@ -9,7 +9,7 @@
     "react-chartkick": "^0.3.2",
     "react-dom": "^16.8.6",
     "react-geolocated": "^2.5.0",
-    "react-scripts": "3.0.1"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
